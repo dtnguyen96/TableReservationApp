@@ -10,8 +10,9 @@ import {
   Button
 } from "reactstrap";
 
-import Table from "./table";
+import Table from "./Table";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default props => {
   const [totalTables, setTotalTables] = useState([]);
 
@@ -88,7 +89,7 @@ export default props => {
     if (selection.time && selection.date) {
       (async _ => {
         let datetime = getDate();
-        let res = await fetch("http://localhost:3005/availability", {
+        let res = await fetch("http://localhost:4000/api/user/availability", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -109,7 +110,7 @@ export default props => {
         setTotalTables(tables);
       })();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection.time, selection.date, selection.size, selection.location]);
 
   // Make the reservation if all details are filled out
@@ -123,7 +124,7 @@ export default props => {
       setReservationError(true);
     } else {
       const datetime = getDate();
-      let res = await fetch("http://localhost:3005/reserve", {
+      let res = await fetch("http://localhost:4000/api/user/reserve", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default props => {
   const getRow1 = _ => {
     let chairs = [];
