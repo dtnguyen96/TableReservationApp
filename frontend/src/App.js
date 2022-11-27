@@ -4,8 +4,12 @@ import Home from './pages/Home'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import Book from './components/Book'
+import Available from './components/Table'
+
 
 function App() {
+  
   return (
     <div className="App">
       <BrowserRouter>
@@ -23,6 +27,14 @@ function App() {
                <Route 
               path="/signup"
               element={<Signup />}
+            /> 
+              <Route
+              path='/reserve'
+              element={<Book />}
+            /> 
+              <Route
+              path='/availability'
+              element={<Available />}
             />
           </Routes>
         </div>
