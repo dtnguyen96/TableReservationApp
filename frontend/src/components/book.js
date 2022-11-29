@@ -24,7 +24,6 @@ export default props => {
     },
     date: new Date(),
     time: null,
-    location: "Any Location",
     size: 0
   });
 
@@ -35,23 +34,18 @@ export default props => {
     email: ""
   });
 
-  // List of potential locations
-  const [locations] = useState(["Any Location", "Patio", "Inside", "Bar"]);
   const [times] = useState([
-    "9AM",
-    "10AM",
-    "11AM",
-    "12PM",
-    "1PM",
-    "2PM",
-    "3PM",
-    "4PM",
-    "5PM"
+    "5PM",
+    "6PM",
+    "7PM",
+    "8PM",
+    "9PM",
+    "10PM"
   ]);
   // Basic reservation "validation"
   const [reservationError, setReservationError] = useState(false);
 
-  const getDate = _ => {
+  const getDates = _ => {
     const months = [
       "January",
       "February",
@@ -86,9 +80,10 @@ export default props => {
 
   useEffect(() => {
     // Check availability of tables from DB when a date and time is selected
-    if (selection.time && selection.date) {
+    console.log(selection)
+    if (selection.time && selection.date && selection.size) {
       (async _ => {
-        let datetime = getDate();
+        let datetime = getDates();
         let res = await fetch("http://localhost:4000/api/user/availability", {
           method: "POST",
           headers: {
@@ -102,16 +97,13 @@ export default props => {
         // Filter available tables with location and group size criteria
         let tables = res.tables.filter(
           table =>
-            (selection.size > 0 ? table.capacity >= selection.size : true) &&
-            (selection.location !== "Any Location"
-              ? table.location === selection.location
-              : true)
+            (selection.size > 0 ? table.capacity >= selection.size : true)
         );
         setTotalTables(tables);
       })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selection.time, selection.date, selection.size, selection.location]);
+  }, [selection.time, selection.date, selection.size]);
 
   // Make the reservation if all details are filled out
   const reserve = async _ => {
@@ -123,7 +115,7 @@ export default props => {
       console.log("Incomplete Details");
       setReservationError(true);
     } else {
-      const datetime = getDate();
+      const datetime = getDates();
       let res = await fetch("http://localhost:4000/api/user/reserve", {
         method: "POST",
         headers: {
@@ -156,7 +148,7 @@ export default props => {
   const getSizes = _ => {
     let newSizes = [];
 
-    for (let i = 1; i < 8; i++) {
+    for (let i = 2; i <= 8; i+=2) {
       newSizes.push(
         <DropdownItem
           key={i}
@@ -179,33 +171,6 @@ export default props => {
     return newSizes;
   };
 
-  // Generate locations dropdown
-  const getLocations = _ => {
-    let newLocations = [];
-    locations.forEach(loc => {
-      newLocations.push(
-        <DropdownItem
-          key={loc}
-          className="booking-dropdown-item"
-          onClick={_ => {
-            let newSel = {
-              ...selection,
-              table: {
-                ...selection.table
-              },
-              location: loc
-            };
-            setSelection(newSel);
-          }}
-        >
-          {loc}
-        </DropdownItem>
-      );
-    });
-    return newLocations;
-  };
-
-  // Generate locations dropdown
   const getTimes = _ => {
     let newTimes = [];
     times.forEach(time => {
@@ -291,7 +256,6 @@ export default props => {
           ) : null}
         </Col>
       </Row>
-
       {!selection.table.id ? (
         <div id="reservation-stuff">
           <Row noGutters className="text-center align-items-center">
@@ -300,28 +264,12 @@ export default props => {
                 type="date"
                 required="required"
                 className="booking-dropdown"
-                value={selection.date.toISOString().split("T")[0]}
+                value={'12/01/2021'}
                 onChange={e => {
-                  if (!isNaN(new Date(new Date(e.target.value)))) {
-                    let newSel = {
-                      ...selection,
-                      table: {
-                        ...selection.table
-                      },
-                      date: new Date(e.target.value)
-                    };
-                    setSelection(newSel);
-                  } else {
-                    console.log("Invalid date");
-                    let newSel = {
-                      ...selection,
-                      table: {
-                        ...selection.table
-                      },
-                      date: new Date()
-                    };
-                    setSelection(newSel);
-                  }
+                  setSelection({
+                    ...selection,
+                    date: new Date(e.target.value)
+                  });
                 }}
               ></input>
             </Col>
@@ -336,14 +284,6 @@ export default props => {
               </UncontrolledDropdown>
             </Col>
             <Col xs="12" sm="3">
-              <UncontrolledDropdown>
-                <DropdownToggle color="none" caret className="booking-dropdown">
-                  {selection.location}
-                </DropdownToggle>
-                <DropdownMenu right className="booking-dropdown-menu">
-                  {getLocations()}
-                </DropdownMenu>
-              </UncontrolledDropdown>
             </Col>
             <Col xs="12" sm="3">
               <UncontrolledDropdown>

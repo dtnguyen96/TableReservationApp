@@ -1,4 +1,4 @@
-
+/*
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Navbar from './components/Navbar'
@@ -44,3 +44,34 @@ function App() {
 }
 
 export default App;
+*/
+
+import React, { useState } from "react";
+
+
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+
+import Main from "./components/Main";
+import Book from "./components/Book";
+import Navbar from "./components/Navbar";
+import ThankYou from "./components/Confirmation";
+
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default _ => {
+  const [page, setPage] = useState(0);
+
+  return (
+    <div>
+      <Navbar setPage={setPage} />
+      {page === 0 ? <Main setPage={setPage} /> : null}
+      {page === 1 ? <Book setPage={setPage} /> : null}
+      {page === 2 ? <ThankYou /> : null}
+      
+      {page === 3 ? <Login setPage={setPage} /> : null}
+      {page === 4 ? <Signup setPage={setPage} /> : null}
+
+    </div>
+  )
+}

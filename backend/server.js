@@ -1,50 +1,12 @@
 require('dotenv').config()
 // ----------------------------------------------------------------
-/*
-const express = require('express')
-const mongoose = require('mongoose')
-const userRoutes = require('./routes/user')
-var cors = require('cors')
-*/
-// ----------------------------------------------------------------
 
 const express = require('express')
 const cors = require('cors')
 
 // Connecting to the Database and start the Server
-//                 const dotenv = requre('dotenv')
 const userRoutes = require('./routes/user')
 
-// ----------------------------------------------------------------
-/*
-//express app 
-const app = express()
-
-app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
-app.use(cors()) 
-app.use(express.json())
-app.use('/api/user', userRoutes)
-
-//routes 
-app.get('/', (req, res) => {
-    res.json({mssg: 'Hello, and Welcome!'})
-})
-//listen for requests
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    // listen for requests
-    app.listen(process.env.PORT, () => {
-      console.log(`Listening on PORT ${process.env.PORT}. Congratulations.`)
-    })
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-*/
 // ----------------------------------------------------------------
 
 // Get access to the MongoDB Atlas client
@@ -70,9 +32,8 @@ APP.use('/api/user', userRoutes)
 // In case someone goes to a page/route that does not exist
 APP.use('*', (req, res) => res.status(404).json({ Error: 'This page does not exist.'}))
 
-APP.use('/availability', require('./routes/availability.route'))
-APP.use('/reserve', require('./routes/reserve.route'))
-
+// APP.use('/availability', require('./routes/availability.route'))
+// APP.use('/reserve', require('./routes/reserve.route'))
 
 
 // Now to actually establish a connection

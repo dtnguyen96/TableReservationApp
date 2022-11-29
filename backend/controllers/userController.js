@@ -5,6 +5,7 @@ const createToken = (_id) => {
   return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
 }
 
+// Login User Function
 const loginUser = async(req,res) => {
     const {email, password} = req.body
 
@@ -18,7 +19,7 @@ const loginUser = async(req,res) => {
     }
 }
 
-//signup user
+// Sign-Up User Function
 const signupUser = async(req,res) => {
 
   const {email, password} = req.body
