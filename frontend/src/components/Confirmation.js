@@ -12,6 +12,7 @@ export default _ => {
           <p className="thanks-subtext">
             You should receive an email with the details of your reservation.
           </p>
+          <p className="thanks-header">There is a $10 no-show fee</p>
         </Col>
       </Row>
     </div>
