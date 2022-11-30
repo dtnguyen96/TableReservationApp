@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Row,
   Col,
@@ -70,6 +73,10 @@ export default props => {
     time = selection.time > 12 ? time + 12 + ":00" : time + ":00";
     console.log(time);
     const datetime = new Date(date + " " + time);
+    /*
+      datetime = 
+    */
+
     return datetime;
   };
 
@@ -260,18 +267,18 @@ export default props => {
         <div id="reservation-stuff">
           <Row noGutters className="text-center align-items-center">
             <Col xs="12" sm="3">
-              <input
-                type="date"
-                required="required"
-                className="booking-dropdown"
-                value={'12/01/2021'}
-                onChange={e => {
-                  setSelection({
-                    ...selection,
-                    date: new Date(e.target.value)
-                  });
-                }}
-              ></input>
+            <DatePicker
+              selected={ selection.date }
+              onChange={e => {
+                console.log(e)
+                setSelection({
+                  ...selection,
+                  date: new Date(e)
+                });
+              }}
+              name="startDate"
+              dateFormat="MM/dd/yyyy"
+            />
             </Col>
             <Col xs="12" sm="3">
               <UncontrolledDropdown>
