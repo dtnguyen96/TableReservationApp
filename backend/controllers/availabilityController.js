@@ -1,17 +1,8 @@
-const mongoose = require("mongoose");
-const express = require("express");
-const router = express.Router();
-
-const Day = require("../models/day.model").model;
-
-// Parameters:
-// {
-//   "date": String ("Dec 02 2019 06:00")
-// }
+const Day = require("../models/day.model").model
 
 
-router.post("/", function(req, res, next) {
-  console.log("Request Attempted");
+const isAvailable = async(req,res) => {
+    console.log("Availability Request: Attempted");
 
   console.log(req.body);
   const dateTime = new Date(req.body.date);
@@ -45,6 +36,6 @@ router.post("/", function(req, res, next) {
       res.status(400).send("Could not search for date");
     }
   });
-});
+}
 
-module.exports = router;
+module.exports = {isAvailable}
