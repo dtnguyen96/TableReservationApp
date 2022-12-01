@@ -17,9 +17,15 @@ Regular booking
 Confirmation
 ![confirmation](confirmation.png)
 <br />
+Login Field Check
+![login](loginValidation.png)
+<br />
+Sign-Up Field Check
+![signup](signupValidation.png)
+<br />
 
 Contribution <br />
 
 Christian -      <br />
 Avanti -   <br />
-Daniel -  <br />
+Daniel -  Table Reservations, Home Page, Some of Navigation<br />
