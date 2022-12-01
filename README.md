@@ -1,6 +1,4 @@
 # TableReservationApp
-
-Testing with separate branches. <br />
 Home page
 ![Home](home.png)
 <br />
