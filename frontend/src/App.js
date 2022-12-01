@@ -48,7 +48,6 @@ export default App;
 
 import React, { useState } from "react";
 
-
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -71,7 +70,6 @@ export default _ => {
       
       {page === 3 ? <Login setPage={setPage} /> : null}
       {page === 4 ? <Signup setPage={setPage} /> : null}
-
     </div>
   )
 }
