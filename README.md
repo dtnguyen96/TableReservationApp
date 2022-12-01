@@ -18,3 +18,8 @@ Confirmation
 ![confirmation](confirmation.png)
 <br />
 
+Contribution <br />
+
+Christian -      <br />
+Avanti -   <br />
+Daniel -  <br />
