@@ -440,11 +440,7 @@ export default props => {
             </Col>
           </Row>
           {!booking.high_traffic_day ? (
-            <Row
-            noGutters
-            className="text-center justify-content-center reservation-details-container"
-          >
-            <Col xs="12" sm="3" className="reservation-details"><h1>no fee</h1></Col></Row>
+            null
           ) : (
             <div>
           <Row
