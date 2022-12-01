@@ -25,8 +25,15 @@ const createReservation = async(req,res) => {
                 table.reservation = new Reservation({
                 name: req.body.name,
                 phone: req.body.phone,
-                email: req.body.email
-                });
+                email: req.body.email,
+                high_traffic_day: req.body.high_traffic_day,
+                street: req.body.street,
+                state: req.body.state,
+                zip: req.body.zip,
+                cardnumber: req.body.cardnumber,
+                expdate: req.body.expdate,
+                cvv: req.body.cvv
+                  });
                 table.isAvailable = false;
                 day.save(err => {
                 if (err) {

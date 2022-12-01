@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {
   Row,
   Col,
@@ -30,11 +31,54 @@ export default props => {
     size: 0
   });
 
+  //Add the holiday mm/dd as needed. 
+  let holidays = ' 12-25 12-26 1-2 1-16 5-14 6-19 7-4 9-4 11-24 12-25';
+
+  const [extraFeeMessage, setExtraFeeMessage] = useState('')
+
+  class DateUtil {
+  
+    static isWeekend(date) {
+      const dayOfWeek = date.getDay();
+      console.log(dayOfWeek);
+      return (dayOfWeek === 6) || (dayOfWeek === 0);
+    }
+  
+    static isPublicHoliday(date) {
+      // return !!holidays[(date.getMonth()+1) + ',' + date.getDate()];
+      let str = '';
+      str += (date.getMonth()+1);
+      str += '-';
+      str += date.getDate();
+      //return holidays.includes((date.getMonth()+1) + "-" + date.getDate());
+      return holidays.includes(str);
+    }
+  
+    static isWeekendOrPublicHoliday(date) {
+      if(this.isPublicHoliday(date) || this.isWeekend(date)) {
+        booking.high_traffic_day = true;
+        return true;
+      } else {
+        booking.high_traffic_day = null;
+        return false;
+      }
+      
+    }
+  }
+
   // User's booking details
   const [booking, setBooking] = useState({
     name: "",
     phone: "",
-    email: ""
+    email: "",
+    high_traffic_day: null,
+    high_traffic_fee: "",    
+    street: "",
+    state: "",
+    zip: "",
+    cardnumber: "",
+    expdate: "",
+    cvv: ""
   });
 
   const [times] = useState([
@@ -73,10 +117,6 @@ export default props => {
     time = selection.time > 12 ? time + 12 + ":00" : time + ":00";
     console.log(time);
     const datetime = new Date(date + " " + time);
-    /*
-      datetime = 
-    */
-
     return datetime;
   };
 
@@ -90,7 +130,7 @@ export default props => {
     console.log(selection)
     if (selection.time && selection.date && selection.size) {
       (async _ => {
-        let datetime = getDates();
+        let datetime = getDates(); //selection.date;
         let res = await fetch("http://localhost:4000/api/user/availability", {
           method: "POST",
           headers: {
@@ -271,21 +311,28 @@ export default props => {
               selected={ selection.date }
               onChange={e => {
                 console.log(e)
+                
                 setSelection({
                   ...selection,
                   date: new Date(e)
                 });
+                {(!(DateUtil.isWeekendOrPublicHoliday(new Date(e)))) 
+                  ? (setExtraFeeMessage('')) 
+                  : (setExtraFeeMessage('Extra $5/person fee due to high traffic day ')) 
+                }  
+  
               }}
               name="startDate"
               dateFormat="MM/dd/yyyy"
             />
+
             </Col>
             <Col xs="12" sm="3">
               <UncontrolledDropdown>
                 <DropdownToggle color="none" caret className="booking-dropdown">
                   {selection.time === null ? "Select a Time" : selection.time}
                 </DropdownToggle>
-                <DropdownMenu right className="booking-dropdown-menu">
+                <DropdownMenu end className="booking-dropdown-menu">
                   {getTimes()}
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -299,18 +346,25 @@ export default props => {
                     ? "Select a Party Size"
                     : selection.size.toString()}
                 </DropdownToggle>
-                <DropdownMenu right className="booking-dropdown-menu">
+                <DropdownMenu end className="booking-dropdown-menu">
                   {getSizes()}
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Col>
+          </Row>
+          <Row>
+            <Col><span style={{
+              fontWeight: 'bold',
+              color: 'red',
+            }}>{extraFeeMessage && <div className="error"> {extraFeeMessage} </div>}</span>
+            </Col>
+            
           </Row>
           <Row noGutters className="tables-display">
             <Col>
               {getEmptyTables() > 0 ? (
                 <p className="available-tables">{getEmptyTables()} available</p>
               ) : null}
-
               {selection.date && selection.time ? (
                 getEmptyTables() > 0 ? (
                   <div>
@@ -385,6 +439,112 @@ export default props => {
               />
             </Col>
           </Row>
+          {!booking.high_traffic_day ? (
+            null
+          ) : (
+            <div>
+          <Row
+            noGutters
+            className="text-center justify-content-center reservation-details-container"
+          >
+            <Col xs="12" sm="3" className="reservation-details">
+              <Input
+                type="text"
+                bsSize="lg"
+                placeholder="Stree Address"
+                className="reservation-input"
+                value={booking.street}
+                onChange={e => {
+                  setBooking({
+                    ...booking,
+                    street: e.target.value
+                  });
+                }}
+              />
+            </Col>
+            <Col xs="12" sm="3" className="reservation-details">
+              <Input
+                type="text"
+                bsSize="lg"
+                placeholder="State"
+                className="reservation-input"
+                value={booking.state}
+                onChange={e => {
+                  setBooking({
+                    ...booking,
+                    state: e.target.value
+                  });
+                }}
+              />
+            </Col>
+            <Col xs="12" sm="3" className="reservation-details">
+              <Input
+                type="text"
+                bsSize="lg"
+                placeholder="Zip"
+                className="reservation-input"
+                value={booking.zip}
+                onChange={e => {
+                  setBooking({
+                    ...booking,
+                    zip: e.target.value
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+          <Row
+          noGutters
+          className="text-center justify-content-center reservation-details-container"
+        >
+          <Col xs="12" sm="3" className="reservation-details">
+            <Input
+              type="text"
+              bsSize="lg"
+              placeholder="Card Number"
+              className="reservation-input"
+              value={booking.cardnumber}
+              onChange={e => {
+                setBooking({
+                  ...booking,
+                  cardnumber: e.target.value
+                });
+              }}
+            />
+          </Col>
+          <Col xs="12" sm="3" className="reservation-details">
+            <Input
+              type="text"
+              bsSize="lg"
+              placeholder="MM/YY"
+              className="reservation-input"
+              value={booking.expdate}
+              onChange={e => {
+                setBooking({
+                  ...booking,
+                  expdate: e.target.value
+                });
+              }}
+            />
+          </Col>
+          <Col xs="12" sm="3" className="reservation-details">
+            <Input
+              type="text"
+              bsSize="lg"
+              placeholder="CVV"
+              className="reservation-input"
+              value={booking.cvv}
+              onChange={e => {
+                setBooking({
+                  ...booking,
+                  cvv: e.target.value
+                });
+              }}
+            />
+          </Col>
+        </Row>
+        </div>
+          )}
           <Row noGutters className="text-center">
             <Col>
               <Button
