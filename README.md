@@ -27,5 +27,5 @@ Sign-Up Field Check
 Contribution <br />
 
 Christian -      <br />
-Avanti -   <br />
+Avanti -  Special Days Tracking, Payment System, Fees <br />
 Daniel -  Table Reservations, Home Page, Some of Navigation<br />
